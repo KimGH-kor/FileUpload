@@ -17,7 +17,7 @@
 <body>
 	<%
 	//전체 프로젝트에 대한 자원을 관리하는 객체 -> 우리가 만든 폴더에 저장하는 등
-		String directory = application.getRealPath("/upload");
+		String directory = "C:/jsp/upload";
 		int maxSize = 1024 * 1024 * 100;
 		String encoding = "UTF-8";
 		
@@ -29,9 +29,16 @@
 		String fileName = multipartRequest.getOriginalFileName("file");
 		String fileRealName = multipartRequest.getFilesystemName("file");
 		
-		new FileDAO().upload(fileName, fileRealName);
-		out.write("파일명 : "+ fileName +"<br>");
-		out.write("실제 파일명 : "+ fileRealName +"<br>");
+		if(!fileName.endsWith(".doc")&& !fileName.endsWith(".hwp")&&
+				!fileName.endsWith(".pdf")&&!fileName.endsWith(".xls")){
+			File file = new File(directory + fileRealName);
+			file.delete();
+			out.write("업로드할 수 없는 확장자입니다.");
+		}else{
+			new FileDAO().upload(fileName, fileRealName);
+			out.write("파일명 : "+ fileName +"<br>");
+			out.write("실제 파일명 : "+ fileRealName +"<br>");	
+		}
 	%>
 </body>
 </html>
